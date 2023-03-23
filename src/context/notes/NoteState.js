@@ -25,11 +25,11 @@ const NoteState=(props)=>{
             method: 'GET',
             headers:{
                 'Content-Type': 'application/json',
-                'auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQxM2ZiNzFkMTkyMmFkMGQ1ZTMxZmIzIn0sImlhdCI6MTY3OTAzOTM0M30.tIHLB24pJWOXqSW_5zJp_MT5IZPPmrC32KIfmW_nfbs"
+                'auth-token': localStorage.getItem("token")
             }
         });
         const json = await response.json()
-        // console.log(json)
+        console.log(json)
         setNotes(json)
     }
 
@@ -40,7 +40,7 @@ const NoteState=(props)=>{
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',
-                'auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQxM2ZiNzFkMTkyMmFkMGQ1ZTMxZmIzIn0sImlhdCI6MTY3OTAzOTM0M30.tIHLB24pJWOXqSW_5zJp_MT5IZPPmrC32KIfmW_nfbs"
+                'auth-token': localStorage.getItem("token")
             },
             body: JSON.stringify({title,description,tag})
         });
@@ -54,11 +54,11 @@ const NoteState=(props)=>{
             method: 'DELETE',
             headers:{
                 'Content-Type': 'application/json',
-                'auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQxM2ZiNzFkMTkyMmFkMGQ1ZTMxZmIzIn0sImlhdCI6MTY3OTAzOTM0M30.tIHLB24pJWOXqSW_5zJp_MT5IZPPmrC32KIfmW_nfbs"
+                'auth-token': localStorage.getItem("token")
             },
         });
         const json =  response.json();
-        // console.log(json);
+        console.log(json);
 
         // console.log("Deleting the note"+id);
         const newNotes = notes.filter((abc)=>{return abc._id!==id})//abc=note because notes consist note object
@@ -72,12 +72,12 @@ const NoteState=(props)=>{
             method: 'PUT',
             headers:{
                 'Content-Type': 'application/json',
-                'auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQxM2ZiNzFkMTkyMmFkMGQ1ZTMxZmIzIn0sImlhdCI6MTY3OTAzOTM0M30.tIHLB24pJWOXqSW_5zJp_MT5IZPPmrC32KIfmW_nfbs"
+                'auth-token': localStorage.getItem("token")
             },
             body: JSON.stringify({title,description,tag})
         });
         const json = await response.json();
-        // console.log(json);
+        console.log(json);
 
         let newNotes = JSON.parse(JSON.stringify(notes))//makes a deep copy of notes and saved to newNotes we do this bcoz react doesnt allowed to change the state using same array object i.e.note
         //Login to edit in client
