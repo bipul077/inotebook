@@ -70,7 +70,7 @@ router.put("/updatenote/:id", fetchuser, async (req, res) => {
       return res.status(404).send("Not Found");
     }
 
-    if (note.user.toString() !== req.user.id) {
+    if (note.user.toString() !== req.user.id) {//if token didnt match then user id also doesnt match(req.user.id comes from fetchuser.js(middleware))
       return res.status(401).send("Not Allowed");
     }
 

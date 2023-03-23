@@ -15,10 +15,11 @@ router.post(
     body("password", "Password must be five characters").isLength({ min: 5 }),
   ],
   async (req, res) => {
+    let success = false
     //if there are errors,return Bad request and the errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success, errors: errors.array() });
     }
     //Check whether the user with this email exists  already
     try {
@@ -26,7 +27,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "Sorry a user with this email already exists" });
+          .json({success, error: "Sorry a user with this email already exists" });
       }
       const salt = await bcrypt.genSalt(10); //generates salt
       const secPass = await bcrypt.hash(req.body.password, salt); //hashing the password and adding salt
@@ -43,8 +44,8 @@ router.post(
         },
       };
       const authtoken = jwt.sign(data, JWT_SECRET);
-
-      res.json({ authtoken });
+      success = true
+      res.json({success, authtoken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server Error");
@@ -60,6 +61,7 @@ router.post(
     body("password", "Password cannot be blank").exists(),
   ],
   async (req, res) => {
+    let success = false
     //if there are errors, return Bad request and the errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -76,9 +78,8 @@ router.post(
       }
       const passwordCompare = await bcrypt.compare(password, user.password); //checks the password with given user's password and database user's password
       if (!passwordCompare) {
-        return res
-          .status(400)
-          .json({ error: "Please try to login with correct credentials" });
+        success = false
+        return res.status(400).json({ success,error: "Please try to login with correct credentials" });
       }
       const data = {
         user: {
@@ -86,7 +87,8 @@ router.post(
         },
       };
       const authtoken = jwt.sign(data, JWT_SECRET);
-      res.json({ authtoken }); //verifies the token and gives the same token
+      success = true;
+      res.json({ success,authtoken }); //verifies the token and gives the same token
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server Error");
@@ -94,7 +96,7 @@ router.post(
   }
 );
 
-//route 3: get loggedin user details. Login required
+//route 3: get loggedin user details. Login required(token required)
 router.post(
   "/getuser",fetchuser,
   async (req, res) => {
